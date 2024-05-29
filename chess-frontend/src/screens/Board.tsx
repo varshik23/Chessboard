@@ -18,6 +18,7 @@ const Board = () => {
     const [sourceSquare, setSourceSquare] = useState<{ row: number, col: number } | null>(null);
     const [moves, setMoves] = useState<string[]>([]);
 
+
     const handleDragStart = (piece: string, row: number, col: number) => {
         setDraggedPiece(piece);
         setSourceSquare({ row, col });
@@ -32,8 +33,8 @@ const Board = () => {
 
             const sourceNotation = convertToChessNotation(sourceSquare.row, sourceSquare.col);
             const destinationNotation = convertToChessNotation(row, col);
-            setMoves([...moves, `${sourceNotation} to ${destinationNotation}`]);
 
+            setMoves([...moves, `${sourceNotation} to ${destinationNotation}`]);
 
             setDraggedPiece(null);
             setSourceSquare(null);
@@ -49,7 +50,6 @@ const Board = () => {
         return `${files[col]}${8 - row}`;
     };
 
-    console.log(moves);
 
     return (
         <div className='board'>
