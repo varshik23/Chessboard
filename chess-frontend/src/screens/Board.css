@@ -1,0 +1,44 @@
+#root {
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    width: 100vw;
+}
+
+.board {
+    flex: 1;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.square {
+    width: 12.5%;
+    height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.brown {
+    background-color: #4c3228;
+}
+
+.white {
+    background-color: #f0d9b5;
+}
+
+.img {
+    max-width: 90%;
+    max-height: 90%;
+}
