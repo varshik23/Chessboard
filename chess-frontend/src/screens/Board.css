@@ -37,3 +37,8 @@
 .white {
     background-color: #f0d9b5;
 }
+
+.img {
+    max-width: 90%;
+    max-height: 90%;
+}

@@ -25,7 +25,7 @@ const Board = () => {
                                     const isBrown = (rowIndex + pieceIndex) % 2 === 1;
                                     return (
                                         <div key={pieceIndex} className={`square ${isBrown ? 'brown' : 'white'}`}>
-                                            {piece && <img src={`/${piece}.png`} alt={piece} />}
+                                            {piece && <img src={`/${piece}.png`} alt={piece} className='img' />}
                                         </div>
                                     )
                                 })
