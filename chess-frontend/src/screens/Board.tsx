@@ -1,18 +1,41 @@
-//Lets create a chess board
-// Path: chess-frontend/src/screens/board.tsx
+import React, { useState } from 'react';
 import './Board.css';
 
-const Board = () => {
-    const board = [['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
+const initialBoard = [
+    ['br', 'bn', 'bb', 'bq', 'bk', 'bb', 'bn', 'br'],
     ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
     ['', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', ''],
     ['', '', '', '', '', '', '', ''],
     ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
-    ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']];
+    ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
+];
 
+const Board = () => {
+    const [board, setBoard] = useState(initialBoard);
+    const [draggedPiece, setDraggedPiece] = useState<string | null>(null);
+    const [sourceSquare, setSourceSquare] = useState<{ row: number, col: number } | null>(null);
 
+    const handleDragStart = (piece: string, row: number, col: number) => {
+        setDraggedPiece(piece);
+        setSourceSquare({ row, col });
+    };
+
+    const handleDrop = (row: number, col: number) => {
+        if (draggedPiece && sourceSquare) {
+            const newBoard = board.map((r) => r.slice());
+            newBoard[sourceSquare.row][sourceSquare.col] = '';
+            newBoard[row][col] = draggedPiece;
+            setBoard(newBoard);
+            setDraggedPiece(null);
+            setSourceSquare(null);
+        }
+    };
+
+    const handleDragOver = (e: React.DragEvent) => {
+        e.preventDefault();
+    };
 
     return (
         <div className='board'>
@@ -24,8 +47,21 @@ const Board = () => {
                                 row.map((piece, pieceIndex) => {
                                     const isBrown = (rowIndex + pieceIndex) % 2 === 1;
                                     return (
-                                        <div key={pieceIndex} className={`square ${isBrown ? 'brown' : 'white'}`}>
-                                            {piece && <img src={`/${piece}.png`} alt={piece} className='img' />}
+                                        <div
+                                            key={pieceIndex}
+                                            className={`square ${isBrown ? 'brown' : 'white'}`}
+                                            onDrop={() => handleDrop(rowIndex, pieceIndex)}
+                                            onDragOver={handleDragOver}
+                                        >
+                                            {piece && (
+                                                <img
+                                                    src={`/${piece}.png`}
+                                                    alt={piece}
+                                                    className='img'
+                                                    draggable
+                                                    onDragStart={() => handleDragStart(piece, rowIndex, pieceIndex)}
+                                                />
+                                            )}
                                         </div>
                                     )
                                 })
