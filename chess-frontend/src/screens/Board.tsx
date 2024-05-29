@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Board.css';
 
 const initialBoard = [
@@ -17,11 +17,33 @@ const Board = () => {
     const [draggedPiece, setDraggedPiece] = useState<string | null>(null);
     const [sourceSquare, setSourceSquare] = useState<{ row: number, col: number } | null>(null);
     const [moves, setMoves] = useState<string[]>([]);
+    const [ws, setWs] = useState<WebSocket | null>(null);
+
 
     const handleDragStart = (piece: string, row: number, col: number) => {
         setDraggedPiece(piece);
         setSourceSquare({ row, col });
     };
+
+    useEffect(() => {
+        const socket = new WebSocket('ws://localhost:8080');
+        setWs(socket);
+
+        socket.onopen = () => {
+            console.log('WebSocket connected');
+        };
+
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            // Handle game updates received from the server
+            console.log(data);
+        };
+
+        return () => {
+            socket.close();
+            console.log('WebSocket disconnected');
+        };
+    }, []);
 
     const handleDrop = (row: number, col: number) => {
         if (draggedPiece && sourceSquare) {
@@ -32,7 +54,11 @@ const Board = () => {
 
             const sourceNotation = convertToChessNotation(sourceSquare.row, sourceSquare.col);
             const destinationNotation = convertToChessNotation(row, col);
+
+            ws?.send(JSON.stringify({ type: 'move', move: `${sourceNotation} to ${destinationNotation}` }));
+
             setMoves([...moves, `${sourceNotation} to ${destinationNotation}`]);
+
 
 
             setDraggedPiece(null);
