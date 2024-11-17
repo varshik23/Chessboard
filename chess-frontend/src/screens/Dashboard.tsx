@@ -1,31 +1,28 @@
 import { useNavigate } from 'react-router-dom';
 import './Dashboard.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-const Dashboard = () => {
+
+const Dashboard = ({ socket }: { socket: WebSocket }) => {
 
     const navigate = useNavigate();
-    const [ws, setWs] = useState<WebSocket | null>(null);
 
     const handleClick = () => {
-        ws?.send(JSON.stringify({ type: 'start' }));
+        socket?.send(JSON.stringify({ type: 'start' }));
         navigate('/board');
-    }
+    };
 
     useEffect(() => {
-        const socket = new WebSocket('ws://localhost:8080');
+        if (socket) {
+            socket.onmessage = (message) => {
+                const data = JSON.parse(message.data.toString()); // Convert Buffer to string
+                if (data.type === 'move') {
+                    console.log('Received move:', data.move);
+                }
+            };
+        }
 
-        setWs(socket);
-
-        socket.onopen = () => {
-            console.log('WebSocket connected');
-        };
-
-        return () => {
-            socket.close();
-            console.log('WebSocket disconnected');
-        };
-    }, []);
+    }, [socket]);
 
     return (
         <>
