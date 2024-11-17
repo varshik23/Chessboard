@@ -32,6 +32,7 @@ const GameManager_1 = __importDefault(require("./GameManager"));
 const wss = new WebSocket.Server({ port: 8080 });
 const gameManager = new GameManager_1.default();
 wss.on('connection', (ws) => {
+    console.log('socket connected');
     gameManager.addPlayer(ws);
     ws.on('message', (message) => {
         try {
@@ -40,7 +41,6 @@ wss.on('connection', (ws) => {
                 gameManager.handleStart(ws);
             }
             else if (data.type === 'move') {
-                // Implement move handling if needed
                 gameManager.handleMove(ws, data.move);
             }
             else if (data.type === 'end') {
@@ -52,6 +52,7 @@ wss.on('connection', (ws) => {
         }
     });
     ws.on('close', () => {
+        console.log('socket disconnected');
         gameManager.removePlayer(ws);
     });
 });

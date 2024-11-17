@@ -12,12 +12,11 @@ const initialBoard = [
     ['wr', 'wn', 'wb', 'wq', 'wk', 'wb', 'wn', 'wr']
 ];
 
-const Board = () => {
+const Board = ({ socket }: { socket: WebSocket }) => {
     const [board, setBoard] = useState(initialBoard);
     const [draggedPiece, setDraggedPiece] = useState<string | null>(null);
     const [sourceSquare, setSourceSquare] = useState<{ row: number, col: number } | null>(null);
     const [moves, setMoves] = useState<string[]>([]);
-
 
     const handleDragStart = (piece: string, row: number, col: number) => {
         setDraggedPiece(piece);
@@ -35,6 +34,8 @@ const Board = () => {
             const destinationNotation = convertToChessNotation(row, col);
 
             setMoves([...moves, `${sourceNotation} to ${destinationNotation}`]);
+
+            socket?.send(JSON.stringify({ type: 'move', move: `${sourceNotation} to ${destinationNotation}` }));
 
             setDraggedPiece(null);
             setSourceSquare(null);

@@ -38,7 +38,7 @@ export default class GameManager {
         if (!currentPlayer || currentPlayer.state !== PlayerState.IDLE) return;
 
         const waitingPlayer = this.players.find(player => player.state === PlayerState.WAITING);
-        if (waitingPlayer) {
+        if (waitingPlayer !== undefined) {
             this.startGame(currentPlayer.socket, waitingPlayer.socket);
         } else {
             currentPlayer.state = PlayerState.WAITING;
@@ -68,6 +68,7 @@ export default class GameManager {
     private startGame(player1Socket: WebSocket, player2Socket: WebSocket) {
         const player1Color = 'white';
         const player2Color = 'black';
+
         const newGame: Game = {
             player1: { socket: player1Socket, color: player1Color },
             player2: { socket: player2Socket, color: player2Color },

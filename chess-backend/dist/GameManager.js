@@ -19,7 +19,8 @@ class GameManager {
         if (!currentPlayer || currentPlayer.state !== PlayerState.IDLE)
             return;
         const waitingPlayer = this.players.find(player => player.state === PlayerState.WAITING);
-        if (waitingPlayer) {
+        console.log(waitingPlayer);
+        if (waitingPlayer !== undefined) {
             this.startGame(currentPlayer.socket, waitingPlayer.socket);
         }
         else {
@@ -70,6 +71,7 @@ class GameManager {
         return this.games.find(game => game.player1.socket === socket || game.player2.socket === socket);
     }
     sendGameUpdate(game, socket) {
+        console.log(game, "Sending game update");
         const gameState = {
             playerColor: game.player1.socket === socket ? game.player1.color : game.player2.color,
             moves: game.moves,
